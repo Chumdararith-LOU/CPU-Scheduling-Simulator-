@@ -1,4 +1,5 @@
 import csv
+import os
 from process import Process
 from scheduler import solve_fcfs, solve_sjf, solve_srt, solve_rr, solve_mlfq
 
@@ -62,7 +63,7 @@ def print_gantt_chart(gantt_data):
         fmt = f"{{:>{duration*2}}}"
         print(fmt.format(end) + " ", end="") # Simple timeline
     print("\n")
-    
+
 def print_results(processes, gantt):
     print("\nPID\tArrival\tBurst\tFinish\tWait\tTurnaround\tResponse")
     print("-" * 65)
@@ -84,8 +85,56 @@ def print_results(processes, gantt):
     print(f"Averages:\t\t\t{total_wait/n:.2f}\t{total_turnaround/n:.2f}\t\t{total_response/n:.2f}")
     print_gantt_chart(gantt)
 
+def export_to_csv(filename, processes, algorithm_name):
+    """
+    Saves the processing metrics to a CSV file.
+    """
+    try:
+        with open(filename, 'w', newline='') as file:
+            writer = csv.writer(file)
+            
+            # Write Header
+            writer.writerow(["Algorithm", algorithm_name])
+            writer.writerow([]) # Empty line
+            writer.writerow(["PID", "Arrival", "Burst", "Finish", "Wait", "Turnaround", "Response"])
+            
+            # Write Data
+            total_wait = 0
+            total_turnaround = 0
+            total_response = 0
+            n = len(processes)
+            
+            for p in processes:
+                writer.writerow([
+                    p.pid, 
+                    p.arrival_time, 
+                    p.burst_time, 
+                    p.completion_time, 
+                    p.waiting_time, 
+                    p.turnaround_time, 
+                    p.response_time
+                ])
+                total_wait += p.waiting_time
+                total_turnaround += p.turnaround_time
+                total_response += p.response_time
+            
+            # Write Averages
+            writer.writerow([])
+            writer.writerow(["Averages", "", "", "", 
+                             f"{total_wait/n:.2f}", 
+                             f"{total_turnaround/n:.2f}", 
+                             f"{total_response/n:.2f}"])
+            
+        print(f"✅ Results exported to '{filename}'")
+    except Exception as e:
+        print(f"❌ Error exporting to CSV: {e}")
+
 if __name__ == "__main__":
     process_list = load_processes("input.csv")
+
+    output_dir = "output_results"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
     
     if process_list:
         # Run FCFS
