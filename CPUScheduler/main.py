@@ -1,6 +1,6 @@
 import csv
 from process import Process
-from scheduler import solve_fcfs, solve_sjf, solve_srt
+from scheduler import solve_fcfs, solve_sjf, solve_srt, solve_rr
 
 def load_processes(filename):
     processes = []
@@ -65,3 +65,10 @@ if __name__ == "__main__":
         process_list_srt = load_processes("input.csv") 
         srt_result, srt_gantt = solve_srt(process_list_srt)
         print_results(srt_result, srt_gantt)
+
+        # Run RR
+        print("\n" + "="*30)
+        process_list_rr = load_processes("input.csv") 
+        # Note: The requirement says Quantum = 2 for the sample scenario
+        rr_result, rr_gantt = solve_rr(process_list_rr, quantum=2)
+        print_results(rr_result, rr_gantt)

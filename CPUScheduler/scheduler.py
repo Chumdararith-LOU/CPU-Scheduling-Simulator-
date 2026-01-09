@@ -1,3 +1,6 @@
+from collections import deque
+
+
 def solve_fcfs(processes):
     print("--- Running FCFS Algorithm ---")
     
@@ -124,4 +127,73 @@ def solve_srt(processes):
     if last_pid is not None:
         gantt_data.append((last_pid, start_time_block, current_time))
         
+    return processes, gantt_data
+
+
+def solve_rr(processes, quantum):
+    print(f"--- Running Round Robin Algorithm (Quantum={quantum}) ---")
+    
+    # Sort by arrival first to easily manage initial loading
+    processes.sort(key=lambda p: p.arrival_time)
+    
+    n = len(processes)
+    queue = deque()
+    current_time = 0
+    completed = 0
+    gantt_data = [] 
+    
+    # Track which processes are already in the queue so we don't add them twice
+    # Using a set of PIDs or indices is safer
+    in_queue_indices = set()
+    
+    # Helper to push new arrivals to queue
+    def check_new_arrivals(time):
+        for i, p in enumerate(processes):
+            if p.arrival_time <= time and i not in in_queue_indices and p.remaining_time > 0:
+                queue.append(i)
+                in_queue_indices.add(i)
+
+    # Initial load
+    check_new_arrivals(current_time)
+    
+    while completed < n:
+        if not queue:
+            # Idle time logic
+            current_time += 1
+            check_new_arrivals(current_time)
+            continue
+            
+        # Get next process index
+        idx = queue.popleft()
+        p = processes[idx]
+        
+        # Determine run time (Process runs for Quantum OR until completion)
+        run_time = min(quantum, p.remaining_time)
+        
+        # Metrics: Response Time (First time it runs)
+        if p.start_time == -1:
+            p.start_time = current_time
+            
+        # Record execution for Gantt
+        gantt_data.append((p.pid, current_time, current_time + run_time))
+        
+        # Execute
+        p.remaining_time -= run_time
+        current_time += run_time
+        
+        # Check for NEW arrivals that happened while this process was running
+        # This order is important: New arrivals join BEFORE the current process is re-queued
+        check_new_arrivals(current_time)
+        
+        # Completion Check
+        if p.remaining_time == 0:
+            completed += 1
+            p.completion_time = current_time
+            p.turnaround_time = p.completion_time - p.arrival_time
+            p.waiting_time = p.turnaround_time - p.burst_time
+            p.response_time = p.start_time - p.arrival_time
+        else:
+            # Not finished? Back to the queue
+            queue.append(idx)
+            
     return processes, gantt_data
