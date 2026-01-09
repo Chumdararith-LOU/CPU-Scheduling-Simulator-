@@ -66,3 +66,62 @@ def solve_sjf(processes):
         current_time = p.completion_time
         
     return processes, gantt_data
+
+
+def solve_srt(processes):
+    print("--- Running SRT Algorithm (Preemptive) ---")
+    
+    # Sort by arrival time initially to handle the queue easier visually
+    processes.sort(key=lambda p: p.arrival_time)
+    
+    n = len(processes)
+    current_time = 0
+    completed = 0
+    gantt_data = [] # Store (PID, start, end)
+    
+    # To detect context switches for the Gantt chart
+    last_pid = None
+    start_time_block = 0
+    
+    while completed < n:
+        # 1. Find all available processes that are NOT done
+        ready_queue = []
+        for p in processes:
+            if p.arrival_time <= current_time and p.remaining_time > 0:
+                ready_queue.append(p)
+        
+        if not ready_queue:
+            if last_pid is not None:
+                gantt_data.append((last_pid, start_time_block, current_time))
+                last_pid = None
+            
+            current_time += 1
+            start_time_block = current_time # Reset block start
+            continue
+
+        current_process = min(ready_queue, key=lambda p: (p.remaining_time, p.arrival_time))
+        
+        if current_process.start_time == -1:
+            current_process.start_time = current_time
+            
+        if current_process.pid != last_pid:
+            if last_pid is not None:
+                 gantt_data.append((last_pid, start_time_block, current_time))
+            last_pid = current_process.pid
+            start_time_block = current_time
+            
+        current_process.remaining_time -= 1
+        current_time += 1
+        
+        if current_process.remaining_time == 0:
+            completed += 1
+            current_process.completion_time = current_time
+            
+            current_process.turnaround_time = current_process.completion_time - current_process.arrival_time
+            current_process.waiting_time = current_process.turnaround_time - current_process.burst_time
+            current_process.response_time = current_process.start_time - current_process.arrival_time
+
+    if last_pid is not None:
+        gantt_data.append((last_pid, start_time_block, current_time))
+        
+    return processes, gantt_data

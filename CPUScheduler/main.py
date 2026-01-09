@@ -1,6 +1,6 @@
 import csv
 from process import Process
-from scheduler import solve_fcfs, solve_sjf
+from scheduler import solve_fcfs, solve_sjf, solve_srt
 
 def load_processes(filename):
     processes = []
@@ -59,3 +59,9 @@ if __name__ == "__main__":
         process_list_sjf = load_processes("input.csv") 
         sjf_result, sjf_gantt = solve_sjf(process_list_sjf)
         print_results(sjf_result, sjf_gantt)
+
+        # Run SRT
+        print("\n" + "="*30)
+        process_list_srt = load_processes("input.csv") 
+        srt_result, srt_gantt = solve_srt(process_list_srt)
+        print_results(srt_result, srt_gantt)
