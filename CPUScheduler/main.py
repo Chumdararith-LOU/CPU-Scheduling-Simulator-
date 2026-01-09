@@ -1,6 +1,6 @@
 import csv
 from process import Process
-from scheduler import solve_fcfs, solve_sjf, solve_srt, solve_rr
+from scheduler import solve_fcfs, solve_sjf, solve_srt, solve_rr, solve_mlfq
 
 def load_processes(filename):
     processes = []
@@ -24,6 +24,45 @@ def load_processes(filename):
         print("Error: Invalid data format in CSV. Ensure numbers are integers.")
         return []
     
+def print_gantt_chart(gantt_data):
+    print("\n--- Gantt Chart ---")
+    # gantt_data is a list of tuples: (PID, Start, End)
+    
+    # Top border
+    print(" ", end="")
+    for entry in gantt_data:
+        pid, start, end = entry
+        duration = end - start
+        print("-" * duration * 2 + " ", end="") # scale width by 2 for visibility
+    print()
+    
+    # PID Row
+    print("|", end="")
+    for entry in gantt_data:
+        pid, start, end = entry
+        duration = end - start
+        # Center the PID in the block
+        fmt = f"{{:^{duration*2}}}"
+        print(fmt.format(pid) + "|", end="")
+    print()
+    
+    # Bottom border
+    print(" ", end="")
+    for entry in gantt_data:
+        pid, start, end = entry
+        duration = end - start
+        print("-" * duration * 2 + " ", end="")
+    print()
+    
+    # Timeline
+    print("0", end="")
+    for entry in gantt_data:
+        pid, start, end = entry
+        duration = end - start
+        fmt = f"{{:>{duration*2}}}"
+        print(fmt.format(end) + " ", end="") # Simple timeline
+    print("\n")
+    
 def print_results(processes, gantt):
     print("\nPID\tArrival\tBurst\tFinish\tWait\tTurnaround\tResponse")
     print("-" * 65)
@@ -43,6 +82,7 @@ def print_results(processes, gantt):
     n = len(processes)
     print("-" * 65)
     print(f"Averages:\t\t\t{total_wait/n:.2f}\t{total_turnaround/n:.2f}\t\t{total_response/n:.2f}")
+    print_gantt_chart(gantt)
 
 if __name__ == "__main__":
     process_list = load_processes("input.csv")
@@ -72,3 +112,10 @@ if __name__ == "__main__":
         # Note: The requirement says Quantum = 2 for the sample scenario
         rr_result, rr_gantt = solve_rr(process_list_rr, quantum=2)
         print_results(rr_result, rr_gantt)
+
+        # Run MLFQ
+        print("\n" + "="*30)
+        process_list_mlfq = load_processes("input.csv") 
+        # Using a large aging interval (e.g. 20) to see normal behavior first
+        mlfq_result, mlfq_gantt = solve_mlfq(process_list_mlfq, aging_interval=20)
+        print_results(mlfq_result, mlfq_gantt)
