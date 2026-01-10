@@ -1,0 +1,12 @@
+CPU Scheduling Simulation Results
+Algorithm:,SJF (Non-Preemptive)
+
+PID,Arrival,Burst,Priority,Start,Finish,Wait,Turnaround,Response
+P1,0,4,0,0,4,0,4,0
+P2,1,5,0,10,15,9,14,9
+P3,2,2,0,5,7,3,5,3
+P4,3,1,0,4,5,1,2,1
+P5,4,6,0,15,21,11,17,11
+P6,5,3,0,7,10,2,5,2
+
+Averages,,,,,,4.33,7.83,4.33

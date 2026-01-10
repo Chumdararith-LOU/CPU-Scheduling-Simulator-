@@ -142,8 +142,6 @@ def solve_rr(processes, quantum):
     completed = 0
     gantt_data = [] 
     
-    # Track which processes are already in the queue so we don't add them twice
-    # Using a set of PIDs or indices is safer
     in_queue_indices = set()
     
     # Helper to push new arrivals to queue
@@ -181,8 +179,6 @@ def solve_rr(processes, quantum):
         p.remaining_time -= run_time
         current_time += run_time
         
-        # Check for NEW arrivals that happened while this process was running
-        # This order is important: New arrivals join BEFORE the current process is re-queued
         check_new_arrivals(current_time)
         
         # Completion Check
