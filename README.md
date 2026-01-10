@@ -2,19 +2,6 @@
 
 A comprehensive Python-based simulator that implements and visualizes five CPU scheduling algorithms used in operating systems.
 
-## 📋 Table of Contents
-- [Project Overview](#project-overview)
-- [Features](#features)
-- [Setup Instructions](#setup-instructions)
-- [Algorithms Implemented](#algorithms-implemented)
-- [Usage](#usage)
-- [Sample Input/Output](#sample-inputoutput)
-- [Results Visualization](#results-visualization)
-- [Project Structure](#project-structure)
-- [Technical Details](#technical-details)
-- [Comparison of Algorithms](#comparison-of-algorithms)
-- [Future Enhancements](#future-enhancements)
-
 ## 🎯 Project Overview
 
 This project simulates CPU scheduling algorithms to understand their behavior and performance characteristics. It processes a set of user-defined jobs through five different scheduling algorithms and provides comprehensive metrics for comparison.
