@@ -38,17 +38,14 @@ def print_gantt_chart(gantt_data):
         print("-" * duration * 2 + " ", end="") 
     print()
     
-    # PID Row
     print("|", end="")
     for entry in gantt_data:
         pid, start, end = entry
         duration = end - start
-        # Center the PID in the block
         fmt = f"{{:^{duration*2}}}"
         print(fmt.format(pid) + "|", end="")
     print()
     
-    # Bottom border
     print(" ", end="")
     for entry in gantt_data:
         pid, start, end = entry
@@ -56,7 +53,6 @@ def print_gantt_chart(gantt_data):
         print("-" * duration * 2 + " ", end="")
     print()
     
-    # Timeline
     print("0", end="")
     for entry in gantt_data:
         pid, start, end = entry
@@ -94,12 +90,10 @@ def export_to_csv(filename, processes, algorithm_name):
         with open(filename, 'w', newline='') as file:
             writer = csv.writer(file)
             
-            # Write Header
             writer.writerow(["Algorithm", algorithm_name])
-            writer.writerow([]) # Empty line
+            writer.writerow([]) 
             writer.writerow(["PID", "Arrival", "Burst", "Finish", "Wait", "Turnaround", "Response"])
             
-            # Write Data
             total_wait = 0
             total_turnaround = 0
             total_response = 0
@@ -137,32 +131,26 @@ if __name__ == "__main__":
         os.makedirs(output_dir)
     
     if process_list:
-        # Run FCFS
         print("\n" + "="*30)
         fcfs_result, fcfs_gantt = solve_fcfs(process_list[:])
         
         print_results(fcfs_result, fcfs_gantt)
 
-        # Run SJF
         print("\n" + "="*30)
         process_list_sjf = load_processes("input.csv") 
         sjf_result, sjf_gantt = solve_sjf(process_list_sjf)
         print_results(sjf_result, sjf_gantt)
 
-        # Run SRT
         print("\n" + "="*30)
         process_list_srt = load_processes("input.csv") 
         srt_result, srt_gantt = solve_srt(process_list_srt)
         print_results(srt_result, srt_gantt)
 
-        # Run RR
         print("\n" + "="*30)
         process_list_rr = load_processes("input.csv") 
-        # Note: The requirement says Quantum = 2 for the sample scenario
         rr_result, rr_gantt = solve_rr(process_list_rr, quantum=2)
         print_results(rr_result, rr_gantt)
 
-        # Run MLFQ
         print("\n" + "="*30)
         print("Running MLFQ for Visualization...")
 

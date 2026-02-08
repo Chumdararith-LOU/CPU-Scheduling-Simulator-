@@ -10,16 +10,11 @@ class CPUSchedulerGUI:
         self.root.title("CPU Scheduling Simulator")
         self.root.geometry("1100x800")
         
-        # Store processes
         self.process_list = []
         
-        # --- UI LAYOUT ---
-        
-        # 1. Control Panel (Top)
         control_frame = tk.LabelFrame(root, text="Configuration", padx=10, pady=10)
         control_frame.pack(fill="x", padx=10, pady=5)
         
-        # Algorithm Selection
         tk.Label(control_frame, text="Algorithm:").grid(row=0, column=0, padx=5)
         self.algo_var = tk.StringVar()
         self.algo_combo = ttk.Combobox(control_frame, textvariable=self.algo_var, state="readonly")
@@ -27,46 +22,37 @@ class CPUSchedulerGUI:
         self.algo_combo.current(0)
         self.algo_combo.grid(row=0, column=1, padx=5)
         
-        # Quantum Input (Only for RR)
         tk.Label(control_frame, text="Quantum:").grid(row=0, column=2, padx=5)
         self.quantum_entry = tk.Entry(control_frame, width=5)
         self.quantum_entry.insert(0, "2")
         self.quantum_entry.grid(row=0, column=3, padx=5)
         
-        # Aging Interval for MLFQ
         tk.Label(control_frame, text="Aging Interval (MLFQ):").grid(row=0, column=4, padx=5)
         self.aging_entry = tk.Entry(control_frame, width=5)
         self.aging_entry.insert(0, "20")
         self.aging_entry.grid(row=0, column=5, padx=5)
         
-        # Run Button
         tk.Button(control_frame, text="Run Simulation", command=self.run_simulation, 
-                 bg="#4CAF50", fg="white", font=("Arial", 10, "bold")).grid(row=0, column=6, padx=10)
+                 bg="#4CAF50", fg="black", font=("Arial", 10, "bold")).grid(row=0, column=6, padx=10)
         
-        # Export Button
         tk.Button(control_frame, text="Export Results", command=self.export_results,
-                 bg="#2196F3", fg="white").grid(row=0, column=7, padx=10)
+                 bg="#2196F3", fg="black").grid(row=0, column=7, padx=10)
         
-        # Reset Button
         tk.Button(control_frame, text="Reset", command=self.reset_data, 
-                 bg="#f44336", fg="white").grid(row=0, column=8, padx=10)
+                 bg="#f44336", fg="black").grid(row=0, column=8, padx=10)
 
-        # 2. Tabbed Interface for Input Methods
         input_notebook = ttk.Notebook(root)
         input_notebook.pack(fill="both", expand=True, padx=10, pady=5)
         
-        # Tab 1: CSV Import
         csv_tab = ttk.Frame(input_notebook)
         input_notebook.add(csv_tab, text="CSV Import")
         
-        # CSV Import Controls
         csv_control_frame = tk.Frame(csv_tab)
         csv_control_frame.pack(fill="x", padx=10, pady=5)
         
         tk.Button(csv_control_frame, text="Browse CSV File", command=self.load_csv).pack(side="left", padx=5)
         tk.Button(csv_control_frame, text="Load Example CSV", command=self.load_example).pack(side="left", padx=5)
         
-        # CSV Display
         csv_display_frame = tk.LabelFrame(csv_tab, text="Loaded CSV Data")
         csv_display_frame.pack(fill="both", expand=True, padx=10, pady=5)
         
@@ -108,12 +94,11 @@ class CPUSchedulerGUI:
         self.priority_entry.grid(row=0, column=7, padx=5)
         
         tk.Button(manual_control_frame, text="Add Process", command=self.add_manual_process,
-                 bg="#4CAF50", fg="white").grid(row=0, column=8, padx=10)
+                 bg="#4CAF50", fg="black").grid(row=0, column=8, padx=10)
         
         tk.Button(manual_control_frame, text="Clear All", command=self.clear_manual_input,
-                 bg="#ff9800", fg="white").grid(row=0, column=9, padx=5)
+                 bg="#ff9800", fg="black").grid(row=0, column=9, padx=5)
         
-        # Manual Input Display
         manual_display_frame = tk.LabelFrame(manual_tab, text="Manual Processes")
         manual_display_frame.pack(fill="both", expand=True, padx=10, pady=5)
         
@@ -128,17 +113,14 @@ class CPUSchedulerGUI:
         self.manual_tree.pack(side="left", fill="both", expand=True)
         manual_scroll.pack(side="right", fill="y")
         
-        # Quick Load Example Button
         example_frame = tk.Frame(manual_tab)
         example_frame.pack(fill="x", padx=10, pady=5)
         tk.Button(example_frame, text="Load Example Processes", 
                  command=self.load_manual_example).pack(side="left")
         
-        # 3. Results Section
         results_frame = tk.LabelFrame(root, text="Simulation Results")
         results_frame.pack(fill="both", expand=True, padx=10, pady=5)
         
-        # Results Tree
         res_columns = ("PID", "Start", "Finish", "Wait", "Turnaround", "Response")
         self.result_tree = ttk.Treeview(results_frame, columns=res_columns, show="headings", height=8)
         for col in res_columns:
@@ -151,14 +133,12 @@ class CPUSchedulerGUI:
         self.result_tree.pack(side="left", fill="both", expand=True)
         result_scroll.pack(side="right", fill="y")
         
-        # 4. Gantt Chart Area (Bottom)
         gantt_frame = tk.LabelFrame(root, text="Gantt Chart Visualization")
         gantt_frame.pack(fill="both", expand=True, padx=10, pady=10)
         
         self.canvas = tk.Canvas(gantt_frame, bg="white", height=120)
         self.canvas.pack(fill="both", expand=True, padx=5, pady=5)
         
-        # Scrollbar for Gantt
         self.gantt_scroll = tk.Scrollbar(gantt_frame, orient="horizontal", command=self.canvas.xview)
         self.gantt_scroll.pack(fill="x")
         self.canvas.configure(xscrollcommand=self.gantt_scroll.set)
@@ -171,7 +151,6 @@ class CPUSchedulerGUI:
             return
             
         self.process_list = []
-        # Clear existing
         for item in self.csv_tree.get_children():
             self.csv_tree.delete(item)
             
@@ -189,7 +168,6 @@ class CPUSchedulerGUI:
             messagebox.showerror("Error", f"Failed to load CSV: {e}")
 
     def load_example(self):
-        # Create example CSV content
         example_data = [
             ["P1", 0, 5, 0],
             ["P2", 1, 3, 0],
@@ -219,7 +197,6 @@ class CPUSchedulerGUI:
                 messagebox.showwarning("Warning", "PID cannot be empty!")
                 return
                 
-            # Check for duplicate PID
             for p in self.process_list:
                 if p.pid == pid:
                     messagebox.showwarning("Warning", f"PID '{pid}' already exists!")
@@ -228,17 +205,14 @@ class CPUSchedulerGUI:
             p = Process(pid, arrival, burst, priority)
             self.process_list.append(p)
             
-            # Add to manual tree
             self.manual_tree.insert("", "end", values=(pid, arrival, burst, priority))
             
-            # Clear input fields
             self.pid_entry.delete(0, tk.END)
             self.arrival_entry.delete(0, tk.END)
             self.burst_entry.delete(0, tk.END)
             self.priority_entry.delete(0, tk.END)
             self.priority_entry.insert(0, "0")
             
-            # Auto-focus next input
             self.pid_entry.focus_set()
             
         except ValueError:
@@ -247,13 +221,9 @@ class CPUSchedulerGUI:
             messagebox.showerror("Error", f"Failed to add process: {e}")
 
     def clear_manual_input(self):
-        # Clear only the manual tree, not the entire process list
         for item in self.manual_tree.get_children():
             self.manual_tree.delete(item)
         
-        # Remove manual processes from process_list
-        # We'll keep a separate list or use tags next time, but for simplicity:
-        # Rebuild process_list from CSV tree only
         temp_list = []
         for item in self.csv_tree.get_children():
             values = self.csv_tree.item(item)['values']
@@ -271,7 +241,6 @@ class CPUSchedulerGUI:
             ["P4", 3, 6, 0]
         ]
         
-        # Clear existing manual input first
         for item in self.manual_tree.get_children():
             self.manual_tree.delete(item)
         
@@ -295,10 +264,8 @@ class CPUSchedulerGUI:
             messagebox.showwarning("Warning", "No processes loaded! Add processes via CSV or Manual Input.")
             return
             
-        # Get Algorithm
         algo = self.algo_var.get()
         
-        # CREATE DEEP COPY of list to avoid modifying original input data
         sim_processes = []
         for p in self.process_list:
             sim_processes.append(Process(p.pid, p.arrival_time, p.burst_time, p.priority))
@@ -323,7 +290,6 @@ class CPUSchedulerGUI:
             self.display_results(result_procs)
             self.draw_gantt_chart(gantt_data)
             
-            # Show summary
             avg_wait = sum(p.waiting_time for p in result_procs) / len(result_procs)
             avg_turn = sum(p.turnaround_time for p in result_procs) / len(result_procs)
             messagebox.showinfo("Simulation Complete", 
@@ -338,11 +304,9 @@ class CPUSchedulerGUI:
             messagebox.showerror("Simulation Error", str(e))
 
     def display_results(self, processes):
-        # Clear previous results
         for item in self.result_tree.get_children():
             self.result_tree.delete(item)
             
-        # Calculate averages
         total_wait = sum(p.waiting_time for p in processes)
         total_turn = sum(p.turnaround_time for p in processes)
         total_response = sum(p.response_time for p in processes)
@@ -352,14 +316,12 @@ class CPUSchedulerGUI:
         avg_turn = total_turn / count if count > 0 else 0
         avg_response = total_response / count if count > 0 else 0
         
-        # Insert process results
         for p in processes:
             self.result_tree.insert("", "end", values=(
                 p.pid, p.start_time, p.completion_time, 
                 p.waiting_time, p.turnaround_time, p.response_time
             ))
             
-        # Insert Average row with different background
         self.result_tree.insert("", "end", values=(
             "AVG", "", "", 
             f"{avg_wait:.2f}", f"{avg_turn:.2f}", f"{avg_response:.2f}"
@@ -378,16 +340,14 @@ class CPUSchedulerGUI:
         start_x = 20
         y = 30
         height = 40
-        scale = 40  # pixels per time unit
+        scale = 40  
         
-        # Color palette for PIDs
         colors = ["#ff9999", "#99ccff", "#99ff99", "#ffff99", "#ffcc99", 
                  "#cc99ff", "#ff99cc", "#99ffcc", "#ccff99", "#ffccff"]
         pid_color_map = {}
         
         max_time = 0
         
-        # Draw process blocks
         for pid, start, end in gantt_data:
             duration = end - start
             width = duration * scale
@@ -395,40 +355,33 @@ class CPUSchedulerGUI:
             x0 = start_x + (start * scale)
             x1 = x0 + width
             
-            # Assign color
             if pid not in pid_color_map:
                 color_idx = len(pid_color_map) % len(colors)
                 pid_color_map[pid] = colors[color_idx]
             
-            # Draw Rectangle
             self.canvas.create_rectangle(x0, y, x1, y+height, 
                                        fill=pid_color_map[pid], 
                                        outline="black", 
                                        width=2)
             
-            # Draw Text (PID)
             self.canvas.create_text((x0+x1)/2, y+height/2, 
                                   text=pid, 
                                   font=("Arial", 10, "bold"))
             
-            # Draw Time Markers at start
             self.canvas.create_text(x0, y+height+15, 
                                   text=str(start), 
                                   font=("Arial", 8))
             
             max_time = max(max_time, end)
         
-        # Final time marker
         self.canvas.create_text(start_x + (max_time * scale), y+height+15, 
                               text=str(max_time), 
                               font=("Arial", 8))
         
-        # Draw timeline
         self.canvas.create_line(start_x, y+height+25, 
                               start_x + (max_time * scale), y+height+25, 
                               width=2)
         
-        # Legend
         legend_x = start_x
         legend_y = y + height + 40
         for i, (pid, color) in enumerate(pid_color_map.items()):
@@ -440,7 +393,6 @@ class CPUSchedulerGUI:
                                   font=("Arial", 9), 
                                   anchor="w")
         
-        # Update scroll region
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
     def export_results(self):
@@ -455,7 +407,6 @@ class CPUSchedulerGUI:
         
         if filename:
             try:
-                # Re-run simulation to get fresh results
                 algo = self.algo_var.get()
                 sim_processes = []
                 for p in self.process_list:
@@ -484,7 +435,6 @@ class CPUSchedulerGUI:
                     writer.writerow(["PID", "Arrival", "Burst", "Priority", 
                                    "Start", "Finish", "Wait", "Turnaround", "Response"])
                     
-                    # Write data
                     for p in result_procs:
                         writer.writerow([
                             p.pid, p.arrival_time, p.burst_time, p.priority,
@@ -492,7 +442,6 @@ class CPUSchedulerGUI:
                             p.waiting_time, p.turnaround_time, p.response_time
                         ])
                     
-                    # Write averages
                     writer.writerow([])
                     avg_wait = sum(p.waiting_time for p in result_procs) / len(result_procs)
                     avg_turn = sum(p.turnaround_time for p in result_procs) / len(result_procs)

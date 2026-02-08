@@ -1,51 +1,65 @@
 # CPU Scheduling Algorithm Simulator
 
-A comprehensive Python-based simulator that implements and visualizes five CPU scheduling algorithms used in operating systems.
+A Python-based simulation tool developed to visualize and analyze the performance of various CPU scheduling algorithms. This project compares algorithms based on Waiting Time, Turnaround Time, and Response Time using Gantt charts and statistical metrics.
 
-## 🎯 Project Overview
 
-This project simulates CPU scheduling algorithms to understand their behavior and performance characteristics. It processes a set of user-defined jobs through five different scheduling algorithms and provides comprehensive metrics for comparison.
+## Features
 
-**Key Objectives:**
-- Implement and compare multiple CPU scheduling algorithms
-- Visualize scheduling sequences using Gantt charts
-- Calculate and compare performance metrics (waiting time, turnaround time, response time)
-- Provide export functionality for analysis
+* **Dual Interface:**
+    * **GUI:** Interactive graphical interface using `tkinter` for easy configuration.
+    * **CLI:** Console-based execution for quick batch processing via `main.py`.
+* **Visualizations:** Generates Gantt charts using `matplotlib` to show process execution flow.
+* **Data Import:** Loads process data dynamically from `input.csv`.
+* **Export Results:** Saves simulation statistics to CSV files.
 
-## ✨ Features
+## Algorithms Implemented
 
-- **Five Scheduling Algorithms**: FCFS, SJF (non-preemptive), SRT (preemptive), RR, MLFQ
-- **CSV Input Support**: Load process data from CSV files
-- **Gantt Chart Visualization**: ASCII-based timeline visualization
-- **Performance Metrics**: Complete statistical analysis for each algorithm
-- **Export Functionality**: Save results to CSV files for further analysis
-- **Modular Design**: Clean separation between algorithms and UI
+1.  **FCFS (First Come First Serve):** Non-preemptive. Processes are served in arrival order.
+2.  **SJF (Shortest Job First):** Non-preemptive. Selects the process with the shortest burst time.
+3.  **SRT (Shortest Remaining Time):** Preemptive. Context switches if a new job has a shorter remaining time than the current one.
+4.  **Round Robin (RR):** Preemptive. Uses a fixed Time Quantum (Default: 2) to ensure fairness.
+5.  **MLFQ (Multilevel Feedback Queue):** Complex priority scheduling with **Aging**.
+    * **Queue 0:** Round Robin (Quantum = 2)
+    * **Queue 1:** Round Robin (Quantum = 4)
+    * **Queue 2:** FCFS (Infinite Quantum)
+    * *Aging Rule:* Processes waiting longer than 20 units are promoted to Q0.
 
 ## 🚀 Setup Instructions
 
 ### Prerequisites
 - Python 3.7 or higher
-- No external dependencies required (uses only Python standard library) unless you what to start **gui** (pip install matplotlib)
+- Matplotlib (for visualizations)
+- Pandas
 
 ### Installation
 
 1. **Clone or download the project files:**
-   ```
-   git clone <repository-url>
+   ```bash
+   git clone https://github.com/Chumdararith-LOU/CPU-Scheduling-Simulator-.git
    cd cpu-scheduling-simulator
    ```
 
-2. **Verify file structure:**
-   Ensure you have the following files in your directory:
-   - `main.py` - Main program entry point
-   - `scheduler.py` - All scheduling algorithm implementations
-   - `process.py` - Process class definition
-   - `input.csv` - Sample input data
+   **Install dependencies:**
+    ```bash
+    pip install matplotlib pandas
+    ```
+
+2. **Project Structure**
+
+| File | Description |
+| :--- | :--- |
+| `main.py` | Entry point for the Console/CLI version of the simulator. |
+| `gui.py` | Entry point for the Graphical User Interface version. |
+| `scheduler.py` | Contains the core logic for all 5 algorithms (`solve_fcfs`, `solve_mlfq`, etc.). |
+| `process.py` | Defines the `Process` class with attributes like `arrival`, `burst`, `wait_time`, etc. |
+| `visualizer.py` | Handles the generation of Gantt charts using `matplotlib`. |
+| `input.csv` | Source file containing process data. |
+
 
 3. **Prepare input file:**
    Modify `input.csv` with your process data or use the provided sample.
 
-## 📊 Algorithms Implemented
+## Algorithms Implemented
 
 ### 1. **First-Come-First-Serve (FCFS)**
 - **Type**: Non-preemptive
@@ -82,11 +96,19 @@ This project simulates CPU scheduling algorithms to understand their behavior an
 - **Features**: Aging mechanism to prevent starvation
 - **Implementation**: `solve_mlfq()` in `scheduler.py`
 
-## 🖥️ Usage
+## Usage
 
 ### Running the Simulator
 
-**Basic execution:**
+**Option 1: Graphical User Interface (Recommended)**
+Run the GUI to select algorithms via dropdown and view charts interactively.
+```bash
+python gui.py
+```
+
+**Option 2: Command Line Interface**
+Run the simulator in the console to process input.csv and print results to the terminal.
+
 ```bash
 python main.py
 ```
@@ -99,7 +121,7 @@ The program will:
 
 ### Custom Input Format
 
-Create a CSV file with the following columns:
+There is a provided CSV file with the following columns:
 ```csv
 pid,arrival_time,burst_time,priority
 P1,0,5,0
@@ -132,7 +154,7 @@ sjf_result, sjf_gantt = solve_sjf(processes_sjf)
 print_results(sjf_result, sjf_gantt)
 ```
 
-# 📝 Sample Input/Output
+# Sample Input/Output
 
 ## Sample Input
 
@@ -178,7 +200,7 @@ Averages:                       5.75    11.25           5.75
 ```
 
 **Analysis:**
-![alt text](img/image.png)
+![alt text](image.png)
 - **P1** arrives first and runs immediately (0 wait time)
 - **P2** waits while P1 completes (4 wait time)
 - **P3** waits for P1 and P2 to complete (6 wait time)
@@ -211,7 +233,7 @@ Averages:                       5.25    10.75           5.25
 ```
 
 **Analysis:**
-![alt text](<img/image copy.png>)
+![alt text](image-1.png)
 - At time 0: Only P1 is available → runs first
 - At time 5: P2(3), P3(8), P4(6) available → shortest is P2(burst=3)
 - At time 8: P3(8), P4(6) available → shortest is P4(burst=6)
@@ -245,7 +267,7 @@ Averages:                       5.00    10.50           4.25
 ```
 
 **Analysis:**
-![img/image copy 2.png](<img/image copy 2.png>)
+![alt text](image-2.png)
 - **P1** starts at time 0 (remaining: 5)
 - At time 1: **P2** arrives (remaining: 3) vs P1(remaining: 4) → P2 preempts P1
 - At time 4: P2 completes, P1 resumes (remaining: 4)
@@ -281,7 +303,7 @@ Averages:                       9.75    15.25           2.00
 ```
 
 **Analysis:**
-![img/image copy 3.png](<img/image copy 4.png>)
+![alt text](image-3.png)
 - Each process gets 2 time units maximum per turn
 - **High context switching**: 12 context switches for 4 processes
 - **Best response times**: All processes get CPU quickly (avg response = 2.00)
@@ -322,7 +344,7 @@ Averages:                       9.25    14.75           1.50
 ```
 
 **Analysis:**
-![alt text](<img/image copy 4.png>)
+![alt text](image-4.png)
 - **Queue 0 (Q=2)**: All processes start here
   - P1 runs 2 units, demotes to Queue 1 (remaining: 3)
   - P2 runs 2 units, demotes to Queue 1 (remaining: 1)
@@ -377,15 +399,15 @@ The `Process` class in `process.py` represents a single process with:
 
 ### Algorithm Implementation Notes
 
-**FCFS**: Simple linear execution based on arrival time.
+**- FCFS**: Simple linear execution based on arrival time.
 
-**SJF**: Requires scanning ready queue for shortest job at each scheduling point.
+**- SJF**: Requires scanning ready queue for shortest job at each scheduling point.
 
-**SRT**: Preemptive version that checks for shorter jobs after each time unit.
+**- SRT**: Preemptive version that checks for shorter jobs after each time unit.
 
-**RR**: Uses a deque for circular queue implementation with quantum enforcement.
+**- RR**: Uses a deque for circular queue implementation with quantum enforcement.
 
-**MLFQ**: Most complex implementation with:
+**- MLFQ**: Most complex implementation with:
 - Three-level priority queue system
 - Aging mechanism to prevent starvation
 - Preemption when higher priority jobs arrive
@@ -398,7 +420,7 @@ The `Process` class in `process.py` represents a single process with:
 - `print_results()`: Displays formatted performance metrics
 - `export_to_csv()`: Saves results to file for analysis
 
-## 📈 Comparison of Algorithms
+## Comparison of Algorithms
 
 ### Performance Analysis
 
@@ -421,3 +443,5 @@ Based on the sample input:
 - **Starvation**: SJF and SRT can starve long processes; MLFQ with aging addresses this
 - **Implementation Complexity**: FCFS (simple) < SJF/RR < SRT < MLFQ (complex)
 
+## Video Presentation
+https://www.youtube.com/watch?v=30qtP1XWFi8
