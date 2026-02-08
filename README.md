@@ -443,5 +443,22 @@ Based on the sample input:
 - **Starvation**: SJF and SRT can starve long processes; MLFQ with aging addresses this
 - **Implementation Complexity**: FCFS (simple) < SJF/RR < SRT < MLFQ (complex)
 
+
+## Sample Results
+
+
+| Algorithm | Avg Waiting Time | Avg Turnaround Time |
+| --- | --- | --- |
+| **SRT** | **5.00** | **10.50** |
+| **SJF** | 5.25 | 10.75 |
+| **FCFS** | 5.75 | 11.25 |
+| **MLFQ** | 9.25 | 14.75 |
+| **Round Robin** | 9.75 | 15.25 |
+
+
+
 ## Video Presentation
 https://www.youtube.com/watch?v=30qtP1XWFi8
+
+
+
