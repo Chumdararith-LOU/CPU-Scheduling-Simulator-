@@ -233,7 +233,7 @@ Averages:                       5.25    10.75           5.25
 ```
 
 **Analysis:**
-![alt text](image-1.png)
+![alt text](img/image-1.png)
 - At time 0: Only P1 is available → runs first
 - At time 5: P2(3), P3(8), P4(6) available → shortest is P2(burst=3)
 - At time 8: P3(8), P4(6) available → shortest is P4(burst=6)
@@ -267,7 +267,7 @@ Averages:                       5.00    10.50           4.25
 ```
 
 **Analysis:**
-![alt text](image-2.png)
+![alt text](img/image-2.png)
 - **P1** starts at time 0 (remaining: 5)
 - At time 1: **P2** arrives (remaining: 3) vs P1(remaining: 4) → P2 preempts P1
 - At time 4: P2 completes, P1 resumes (remaining: 4)
@@ -303,7 +303,7 @@ Averages:                       9.75    15.25           2.00
 ```
 
 **Analysis:**
-![alt text](image-3.png)
+![alt text](img/image-3.png)
 - Each process gets 2 time units maximum per turn
 - **High context switching**: 12 context switches for 4 processes
 - **Best response times**: All processes get CPU quickly (avg response = 2.00)
@@ -344,7 +344,7 @@ Averages:                       9.25    14.75           1.50
 ```
 
 **Analysis:**
-![alt text](image-4.png)
+![alt text](img/image-4.png)
 - **Queue 0 (Q=2)**: All processes start here
   - P1 runs 2 units, demotes to Queue 1 (remaining: 3)
   - P2 runs 2 units, demotes to Queue 1 (remaining: 1)
