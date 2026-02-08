@@ -12,9 +12,3 @@ __pycache__/
 ehthumbs.db
 Thumbs.db
 
-# Images
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.bmp
